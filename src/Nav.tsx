@@ -6,20 +6,22 @@ import {
   NavigationMenuList,
 } from "@/components/ui/navigation-menu";
 
+const navItems = [
+  { label: "Home", path: "/" },
+  { label: "Clusters", path: "/clusters" },
+];
+
 export function Nav() {
   return (
     <NavigationMenu>
       <NavigationMenuList>
-        <NavigationMenuItem>
-          <NavigationMenuLink asChild>
-            <Link to="/">Home</Link>
-          </NavigationMenuLink>
-        </NavigationMenuItem>
-        <NavigationMenuItem>
-          <NavigationMenuLink asChild>
-            <Link to="/about">About</Link>
-          </NavigationMenuLink>
-        </NavigationMenuItem>
+        {navItems.map(({ label, path }) => (
+          <NavigationMenuItem key={path}>
+            <NavigationMenuLink asChild>
+              <Link to={path}>{label}</Link>
+            </NavigationMenuLink>
+          </NavigationMenuItem>
+        ))}
       </NavigationMenuList>
     </NavigationMenu>
   );
