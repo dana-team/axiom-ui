@@ -5,6 +5,7 @@ import {
   NavigationMenuLink,
   NavigationMenuList,
 } from "@/components/ui/navigation-menu";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 const navItems = [
   { label: "Home", path: "/" },
@@ -23,6 +24,7 @@ export function Nav() {
           </NavigationMenuItem>
         ))}
       </NavigationMenuList>
+      <ThemeToggle />
     </NavigationMenu>
   );
 }

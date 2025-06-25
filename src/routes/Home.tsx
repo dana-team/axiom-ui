@@ -19,30 +19,29 @@ const FeatureCard = ({
   delay = 0,
 }: FeatureCardProps) => (
   <motion.div
-    className="bg-black/30 backdrop-blur-xl rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 ease-in-out border border-white/10"
+    className="bg-background/30 backdrop-blur-xl rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 ease-in-out border border-border"
     whileHover={{
       scale: 1.05,
       rotateY: 15,
-      borderColor: "rgba(255,255,255,0.2)",
     }}
     whileTap={{ scale: 0.95 }}
     initial={{ opacity: 0, y: 20 }}
     animate={{ opacity: 1, y: 0 }}
     transition={{ duration: 0.5, delay }}
   >
-    <Icon className="w-12 h-12 mb-4 text-purple-400" />
-    <h3 className="text-xl font-bold mb-2 text-white">{feature}</h3>
-    <p className="text-gray-400">{description}</p>
+    <Icon className="w-12 h-12 mb-4 text-primary-lighter" />
+    <h3 className="text-xl font-bold mb-2 text-foreground">{feature}</h3>
+    <p className="text-muted-foreground">{description}</p>
   </motion.div>
 );
 
 export default function HomePage() {
   return (
-    <div className="relative min-h-screen overflow-hidden bg-black text-white">
+    <div className="relative min-h-screen overflow-hidden bg-background text-foreground">
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-1/4 -left-1/4 w-1/2 h-1/2 bg-purple-600 rounded-full filter blur-[100px] opacity-20 animate-pulse"></div>
-        <div className="absolute -bottom-1/4 -right-1/4 w-1/2 h-1/2 bg-purple-600 rounded-full filter blur-[100px] opacity-20 animate-pulse"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full h-full bg-gradient-to-br from-purple-600/20 via-purple-700/20 to-purple-500/20 rounded-full filter blur-[120px] animate-spin-slow"></div>
+        <div className="absolute -top-1/4 -left-1/4 w-1/2 h-1/2 bg-primary rounded-full filter blur-[100px] opacity-20 animate-pulse"></div>
+        <div className="absolute -bottom-1/4 -right-1/4 w-1/2 h-1/2 bg-primary rounded-full filter blur-[100px] opacity-20 animate-pulse"></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full h-full bg-gradient-to-br from-primary/20 via-primary-dark/10 to-primary-light/20 rounded-full filter blur-[120px] animate-spin-slow"></div>
       </div>
 
       <div className="relative z-10 mt-5 lg:mt-0">
@@ -54,7 +53,7 @@ export default function HomePage() {
             transition={{ duration: 0.8, ease: "easeOut" }}
           >
             <motion.h1
-              className="text-5xl font-extrabold leading-tight tracking-tighter md:text-7xl bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-purple-500 to-pink-500"
+              className="text-5xl font-extrabold leading-tight tracking-tighter md:text-7xl bg-clip-text text-transparent bg-gradient-to-r from-primary-lighter via-primary-light to-primary-accent"
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ duration: 0.8, delay: 0.2 }}
@@ -62,12 +61,12 @@ export default function HomePage() {
               Discover Your Clusters with Axiom
             </motion.h1>
             <motion.p
-              className="max-w-[700px] text-xl text-gray-400 mt-2 font-normal"
+              className="max-w-[700px] text-xl text-muted-foreground mt-2 font-normal"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.8, delay: 0.6 }}
             >
-              Axiom gives you visibility into all clusters. manage everything in
+              Axiom gives you visibility into all clusters. Manage everything in
               one place.
             </motion.p>
           </motion.div>
@@ -82,7 +81,7 @@ export default function HomePage() {
               to="/clusters"
               className={
                 buttonVariants({ size: "lg", variant: "default" }) +
-                " bg-gradient-to-r from-purple-700 to-purple-500 text-white font-semibold px-8 py-4 rounded-full"
+                " bg-gradient-to-r from-primary-dark to-primary-lighter text-white font-semibold px-8 py-4 rounded-full"
               }
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
@@ -95,8 +94,8 @@ export default function HomePage() {
               target="_blank"
               rel="noreferrer"
               className={
-                buttonVariants({ variant: "outline", size: "lg" }) +
-                " border-2 border-white/20 text-black font-semibold px-8 py-4 rounded-full"
+                buttonVariants({ variant: "secondary", size: "lg" }) +
+                " border-2 font-semibold px-8 py-4 rounded-full"
               }
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}

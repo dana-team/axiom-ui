@@ -3,8 +3,17 @@ import { Layout } from "@/Layout";
 import Home from "@/routes/Home";
 import Clusters from "@/routes/Clusters";
 import NotFound from "@/routes/NotFound";
+import { useEffect } from "react";
 
 function App() {
+  useEffect(() => {
+    const savedTheme = localStorage.getItem("theme") as "light" | "dark" | null;
+    if (savedTheme) {
+      document.documentElement.classList.remove("light", "dark");
+      document.documentElement.classList.add(savedTheme);
+    }
+  }, []);
+
   return (
     <Routes>
       <Route path="/" element={<Home />} />
