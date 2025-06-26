@@ -2,6 +2,7 @@ import { Routes, Route } from "react-router-dom";
 import { Layout } from "@/Layout";
 import Home from "@/routes/Home";
 import Clusters from "@/routes/Clusters";
+import ClusterInfo from "@/routes/ClusterInfo";
 import NotFound from "@/routes/NotFound";
 import { useEffect } from "react";
 
@@ -21,6 +22,7 @@ function App() {
 
       <Route element={<Layout />}>
         <Route path="/clusters" element={<Clusters />} />
+        <Route path="/clusterInfo" element={<ClusterInfo />}/>
       </Route>
     </Routes>
   );
