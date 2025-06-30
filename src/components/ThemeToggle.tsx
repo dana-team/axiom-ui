@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Sun, Moon } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 
-export function ThemeToggle() {
+const ThemeToggle = () => {
   const [theme, setTheme] = useState<"light" | "dark">("dark");
 
   useEffect(() => {
@@ -22,13 +22,15 @@ export function ThemeToggle() {
 
   return (
     <div className="flex items-center gap-2">
-      <Moon className="h-4 w-4" />
+      <Sun className="h-4 w-4" />
       <Switch
         checked={theme === "dark"}
         onCheckedChange={toggleTheme}
         aria-label="Toggle theme"
       />
-      <Sun className="h-4 w-4" />
+      <Moon className="h-4 w-4" />
     </div>
   );
-}
+};
+
+export default ThemeToggle;
