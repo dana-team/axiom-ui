@@ -4,7 +4,7 @@ import { Nav } from "@/Nav";
 export function Layout() {
   return (
     <>
-      <header className="p-4 border-b">
+      <header>
         <Nav />
       </header>
       <main className="p-4">
