@@ -34,7 +34,7 @@ export function Nav() {
         value="filters"
         className="border-b border-sidebar-border relative"
       >
-        <nav className="flex items-center justify-between h-13 px-4 py-2">
+        <nav className="flex items-center justify-between h-16 px-4 py-2">
           <div className="flex items-center gap-2">
             <Button
               variant="ghost"
