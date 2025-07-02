@@ -4,6 +4,7 @@ import Home from "@/routes/Home";
 import Clusters from "@/routes/Clusters";
 import NotFound from "@/routes/NotFound";
 import { useEffect } from "react";
+import ClusterInfo from "@/routes/ClusterInfo";
 
 function App() {
   useEffect(() => {
@@ -21,6 +22,7 @@ function App() {
 
       <Route element={<Layout />}>
         <Route path="/clusters" element={<Clusters />} />
+        <Route path="/clusters/:id" element={<ClusterInfo />} />
       </Route>
     </Routes>
   );
