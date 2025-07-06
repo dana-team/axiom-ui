@@ -20,7 +20,7 @@ const generateFakeData = (startIndex: number, count: number): Cluster[] => {
     id: startIndex + i,
     name: `Cluster ${startIndex + i + 1}`,
     version: "v1.2.0",
-    network: "nesharim",
+    network: "net",
     environment: "production",
   }));
 };
@@ -89,7 +89,7 @@ export default function ClustersPage() {
   const totalPages = Math.ceil(TOTAL_ITEMS / ITEMS_PER_PAGE);
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-10 space-y-6">
       <h1 className="text-3xl font-bold">{`${TOTAL_ITEMS} Clusters found`}</h1>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">

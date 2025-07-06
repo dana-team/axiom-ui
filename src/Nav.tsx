@@ -28,7 +28,7 @@ export function Nav() {
       type="single"
       collapsible
       value={showFilters ? "filters" : ""}
-      className="w-full bg-sidebar text-sidebar-foreground"
+      className="w-full bg-sidebar text-sidebar-foreground z-10"
     >
       <AccordionItem
         value="filters"
