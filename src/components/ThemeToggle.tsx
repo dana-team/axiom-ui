@@ -12,7 +12,7 @@ const ThemeToggle = () => {
     }
   }, []);
 
-  const toggleTheme = (checked: boolean) => {
+  const toggleTheme = (checked: boolean): void => {
     const newTheme = checked ? "dark" : "light";
     setTheme(newTheme);
     document.documentElement.classList.remove("light", "dark");

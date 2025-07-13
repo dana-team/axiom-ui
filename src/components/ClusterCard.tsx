@@ -3,11 +3,11 @@ import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router-dom";
 import type { Cluster } from "@/consts";
 
-interface Props {
+interface ClusterCardProps {
   cluster: Cluster;
 }
 
-const ClusterCard = ({ cluster }: Props) => {
+const ClusterCard = ({ cluster }: ClusterCardProps) => {
   return (
     <Link to={`/clusters/${cluster.id}`} className="block">
       <Card className="transition hover:ring-2">

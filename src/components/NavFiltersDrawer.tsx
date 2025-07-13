@@ -2,6 +2,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 
 const NavFiltersDrawer = () => {
   const filters = ["Production", "Staging", "Development"];
+
   return (
     <div className="flex justify-evenly">
       {filters.map((filter, index) => (

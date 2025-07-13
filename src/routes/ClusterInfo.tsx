@@ -6,18 +6,13 @@ import { Clock } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { SiGrafana, SiRedhatopenshift } from "react-icons/si";
 import { ClusterLink } from "@/components/ClusterLink";
+import type { Cluster } from "@/consts";
 
 const grafanaUrl = import.meta.env.VITE_GRAFANA_URL;
 const openshiftUrl = import.meta.env.VITE_OPENSHIFT_URL;
 
-type ClusterInfo = {
-  name: string;
-  version: string;
-  network: string;
-  environment: string;
-};
-
-const STATIC_CLUSTER: ClusterInfo = {
+const STATIC_CLUSTER: Cluster = {
+  id: 1,
   name: "Cluster",
   version: "v1.2.0",
   network: "net",

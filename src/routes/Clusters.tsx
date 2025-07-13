@@ -11,6 +11,7 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import ClusterCard from "@/components/ClusterCard";
+import ClusterCompareDialog from "@/components/ClusterCompareDialog/ClusterCompareDialog";
 
 const TOTAL_ITEMS = 27;
 const ITEMS_PER_PAGE = 9;
@@ -90,7 +91,10 @@ export default function ClustersPage() {
 
   return (
     <div className="p-10 space-y-6">
-      <h1 className="text-3xl font-bold">{`${TOTAL_ITEMS} Clusters found`}</h1>
+      <div className="flex justify-between">
+        <h1 className="text-3xl font-bold">{`${TOTAL_ITEMS} Clusters found`}</h1>
+        <ClusterCompareDialog clusters={clusters} />
+      </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {loading
@@ -105,7 +109,9 @@ export default function ClustersPage() {
                 </CardContent>
               </Card>
             ))
-          : clusters.map((cluster) => <ClusterCard cluster={cluster} />)}
+          : clusters.map((cluster) => (
+              <ClusterCard key={cluster.id} cluster={cluster} />
+            ))}
       </div>
 
       <ClustersPagePagination
