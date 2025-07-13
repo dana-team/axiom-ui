@@ -10,6 +10,12 @@ import { Button } from "@/components/ui/button";
 import type { Cluster } from "@/consts";
 import ClustersSelect from "@/components/ClusterCompareDialog/ClustersSelect";
 import ComparisonDisplay from "@/components/ClusterCompareDialog/ComparisonDisplay";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { Columns } from "lucide-react";
 
 interface ClusterCompareDialogProps {
   clusters: Cluster[];
@@ -109,17 +115,22 @@ const ClusterCompareDialog = ({ clusters }: ClusterCompareDialogProps) => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button
-          size="sm"
-          className="bg-primary-dark/90 hover:bg-primary-dark/80 dark:bg-primary-lighter/70 dark:hover:bg-primary/60 
-          text-white px-4 transition"
-          onClick={() => {
-            console.log("Compare:");
-            setOpen(true);
-          }}
-        >
-          Compare Clusters
-        </Button>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              size="icon"
+              className="bg-primary-dark/90 hover:bg-primary-dark/80 dark:bg-primary-lighter/70 dark:hover:bg-primary/60 
+        text-white transition round"
+              onClick={() => setOpen(true)}
+            >
+              <Columns className="h-5 w-5" />
+              <span className="sr-only">Compare Clusters</span>
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent side="left" className="text-sm">
+            Compare Clusters
+          </TooltipContent>
+        </Tooltip>
       </DialogTrigger>
 
       <DialogContent className="min-w-2xl bg-card">
