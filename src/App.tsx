@@ -5,13 +5,19 @@ import Clusters from "@/routes/Clusters";
 import NotFound from "@/routes/NotFound";
 import { useEffect } from "react";
 import ClusterInfo from "@/routes/ClusterInfo";
+import type { Theme } from "./consts";
+import { useStore } from "@/store/useStore";
 
 function App() {
+  const setTheme = useStore((state) => state.setTheme);
+
   useEffect(() => {
-    const savedTheme = localStorage.getItem("theme") as "light" | "dark" | null;
+    const appStorage = localStorage.getItem("app-storage");
+    const parsedAppStorage = JSON.parse(appStorage ?? "");
+    const savedTheme = parsedAppStorage?.state?.theme as Theme | null;
+
     if (savedTheme) {
-      document.documentElement.classList.remove("light", "dark");
-      document.documentElement.classList.add(savedTheme);
+      setTheme(savedTheme);
     }
   }, []);
 

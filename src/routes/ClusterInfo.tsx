@@ -12,7 +12,7 @@ const grafanaUrl = import.meta.env.VITE_GRAFANA_URL;
 const openshiftUrl = import.meta.env.VITE_OPENSHIFT_URL;
 
 const STATIC_CLUSTER: Cluster = {
-  id: 1,
+  id: "1",
   name: "Cluster",
   version: "v1.2.0",
   network: "net",

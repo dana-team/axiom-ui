@@ -1,5 +1,7 @@
+export type Theme = "light" | "dark";
+
 export type Cluster = {
-  id: number;
+  id: string;
   name: string;
   version: string;
   network: string;

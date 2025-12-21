@@ -1,23 +1,13 @@
-import { useEffect, useState } from "react";
 import { Sun, Moon } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
+import { useStore } from "@/store/useStore";
 
 const ThemeToggle = () => {
-  const [theme, setTheme] = useState<"light" | "dark">("dark");
+  const theme = useStore((state) => state.theme);
+  const setTheme = useStore((state) => state.setTheme);
 
-  useEffect(() => {
-    const savedTheme = localStorage.getItem("theme") as "light" | "dark" | null;
-    if (savedTheme) {
-      setTheme(savedTheme);
-    }
-  }, []);
-
-  const toggleTheme = (checked: boolean): void => {
-    const newTheme = checked ? "dark" : "light";
-    setTheme(newTheme);
-    document.documentElement.classList.remove("light", "dark");
-    document.documentElement.classList.add(newTheme);
-    localStorage.setItem("theme", newTheme);
+  const toggleTheme = (checked: boolean) => {
+    setTheme(checked ? "dark" : "light");
   };
 
   return (

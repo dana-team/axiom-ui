@@ -18,7 +18,7 @@ const ITEMS_PER_PAGE = 9;
 
 const generateFakeData = (startIndex: number, count: number): Cluster[] => {
   return Array.from({ length: count }, (_, i) => ({
-    id: startIndex + i,
+    id: `${startIndex + i}`,
     name: `Cluster ${startIndex + i + 1}`,
     version: "v1.2.0",
     network: "net",
