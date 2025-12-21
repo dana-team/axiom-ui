@@ -2,7 +2,7 @@ FROM node:25-alpine AS builder
 WORKDIR /app
 
 COPY package*.json ./
-RUN npm ci --frozen-lockfile
+RUN npm i
 COPY . .
 RUN VITE_BACKEND_URL="__BACKEND_URL__" \
     npm run build
