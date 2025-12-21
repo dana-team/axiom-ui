@@ -44,14 +44,14 @@ const ClusterCompareDialog = ({ clusters }: ClusterCompareDialogProps) => {
   const [jsonResult, setJsonResult] = useState("");
 
   const handleAdd = (cluster: Cluster): void => {
-    if (!selectedClusters.some((s) => s.id === cluster.id)) {
+    if (!selectedClusters.some((s) => s.clusterID === cluster.clusterID)) {
       setSelectedClusters((prev) => [...prev, cluster]);
     }
   };
 
   const handleRemove = (clusterToRemove: Cluster): void => {
     setSelectedClusters((prev) =>
-      prev.filter((cluster) => cluster.id !== clusterToRemove.id)
+      prev.filter((cluster) => cluster.clusterID !== clusterToRemove.clusterID)
     );
   };
 

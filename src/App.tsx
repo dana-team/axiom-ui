@@ -12,13 +12,16 @@ function App() {
   const setTheme = useStore((state) => state.setTheme);
 
   useEffect(() => {
-    const appStorage = localStorage.getItem("app-storage");
-    const parsedAppStorage = JSON.parse(appStorage ?? "");
-    const savedTheme = parsedAppStorage?.state?.theme as Theme | null;
 
-    if (savedTheme) {
+    const appStorage = localStorage.getItem("app-storage");
+    if (appStorage) {
+      const parsedAppStorage = JSON.parse(appStorage);
+      const savedTheme = parsedAppStorage?.state?.theme as Theme;
       setTheme(savedTheme);
+    } else {
+      setTheme("light");
     }
+    
   }, []);
 
   return (

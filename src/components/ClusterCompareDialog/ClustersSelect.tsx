@@ -29,7 +29,7 @@ const ClustersList = ({
       <ul className="p-2 space-y-1">
         {clusters.map((cluster) => (
           <li
-            key={cluster.id}
+            key={cluster.clusterID}
             className="flex items-center justify-between hover:bg-muted px-2 rounded border"
           >
             <span>{cluster.name}</span>
@@ -59,9 +59,9 @@ const ClustersSelect = ({
 }: ClustersSelectProps) => {
   const filteredClusters = clusters.filter(
     (cluster) =>
-      cluster.name.toLowerCase().includes(search.toLowerCase()) &&
+      cluster.name?.toLowerCase().includes(search.toLowerCase()) &&
       !selectedClusters.some(
-        (selectedCluster) => selectedCluster.id === cluster.id
+        (selectedCluster) => selectedCluster.clusterID === cluster.clusterID
       )
   );
 

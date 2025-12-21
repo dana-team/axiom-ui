@@ -1,7 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import type { Cluster } from "@/consts";
 import {
   Pagination,
   PaginationContent,
@@ -12,19 +11,9 @@ import {
 } from "@/components/ui/pagination";
 import ClusterCard from "@/components/ClusterCard";
 import ClusterCompareDialog from "@/components/ClusterCompareDialog/ClusterCompareDialog";
+import { useStore } from "@/store/useStore";
 
-const TOTAL_ITEMS = 27;
 const ITEMS_PER_PAGE = 9;
-
-const generateFakeData = (startIndex: number, count: number): Cluster[] => {
-  return Array.from({ length: count }, (_, i) => ({
-    id: `${startIndex + i}`,
-    name: `Cluster ${startIndex + i + 1}`,
-    version: "v1.2.0",
-    network: "net",
-    environment: "production",
-  }));
-};
 
 const ClustersPagePagination = ({
   currentPage,
@@ -72,27 +61,18 @@ const ClustersPagePagination = ({
 };
 
 export default function ClustersPage() {
-  const [loading, setLoading] = useState(true);
-  const [clusters, setClusters] = useState<Cluster[]>([]);
-  const [page, setPage] = useState(1);
+  const { clusters, totalItems, loading, page, setPage, fetchClusters } =
+    useStore();
 
   useEffect(() => {
-    setLoading(true);
-    const timeout = setTimeout(() => {
-      const startIndex = (page - 1) * ITEMS_PER_PAGE;
-      setClusters(generateFakeData(startIndex, ITEMS_PER_PAGE));
-      setLoading(false);
-    }, 1000);
+    fetchClusters();
+  }, []);
 
-    return () => clearTimeout(timeout);
-  }, [page]);
-
-  const totalPages = Math.ceil(TOTAL_ITEMS / ITEMS_PER_PAGE);
-
+  const totalPages = Math.ceil(totalItems || 0 / ITEMS_PER_PAGE) || 1;
   return (
     <div className="p-10 space-y-6">
       <div className="flex justify-between">
-        <h1 className="text-3xl font-bold">{`${TOTAL_ITEMS} Clusters found`}</h1>
+        <h1 className="text-3xl font-bold">{`${totalItems} Clusters found`}</h1>
         <ClusterCompareDialog clusters={clusters} />
       </div>
 
@@ -110,7 +90,7 @@ export default function ClustersPage() {
               </Card>
             ))
           : clusters.map((cluster) => (
-              <ClusterCard key={cluster.id} cluster={cluster} />
+              <ClusterCard key={cluster.clusterID} cluster={cluster} />
             ))}
       </div>
 

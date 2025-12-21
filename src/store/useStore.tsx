@@ -1,14 +1,18 @@
 import type { Cluster, Theme } from "@/consts";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+import { fetchFilteredClusters } from "@/ClusterService";
 
-type Store = {
-  selectedClusters: Cluster[];
+type State = {
+  clusters: Cluster[];
   theme: Theme;
-  addCluster: (cluster: Cluster) => void;
-  removeCluster: (id: string) => void;
-  resetClusters: () => void;
+  loading: boolean;
+  error: string | null;
+  page: number;
+  totalItems: number;
   setTheme: (theme: Theme) => void;
+  setPage: (page: number) => void;
+  fetchClusters: () => void;
 };
 
 const setDocumentTheme = (theme: Theme): void => {
@@ -16,24 +20,22 @@ const setDocumentTheme = (theme: Theme): void => {
   document.documentElement.classList.add(theme);
 };
 
-export const useStore = create<Store>()(
+export const useStore = create<State>()(
   persist(
     (set) => ({
-      selectedClusters: [],
+      clusters: [],
+      totalItems: 0,
+      loading: false,
+      error: null,
+      page: 1,
       theme: "light",
-
-      addCluster: (cluster) =>
-        set((state) => ({
-          selectedClusters: [...state.selectedClusters, cluster],
-        })),
-      removeCluster: (id) =>
-        set((state) => ({
-          selectedClusters: state.selectedClusters.filter((c) => c.id !== id),
-        })),
-      resetClusters: () => set({ selectedClusters: [] }),
       setTheme: (theme) => {
         set({ theme });
         setDocumentTheme(theme);
+      },
+      setPage: (page: number) => set({ page }),
+      fetchClusters: async () => {
+        await fetchFilteredClusters();
       },
     }),
     {
