@@ -19,7 +19,7 @@ const MotionLink = motion(Link);
 
 export function Nav() {
   const navigate = useNavigate();
-  const [showFilters, setShowFilters] = useState(false);
+  const [showFilters] = useState(false);
   const [debouncedValue, setValue] = useDebounceValue("", 500);
 
   useEffect(() => {
