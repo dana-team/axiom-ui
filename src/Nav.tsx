@@ -2,22 +2,29 @@ import { Link, useNavigate } from "react-router-dom";
 import ThemeToggle from "@/components/ThemeToggle";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button, buttonVariants } from "@/components/ui/button";
-import { BookMarked, LogOut, Search, SlidersHorizontal } from "lucide-react";
+import { BookMarked, LogOut, Search } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Input } from "@/components/ui/input";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
 } from "@/components/ui/accordion";
 import NavFiltersDrawer from "@/components/NavFiltersDrawer";
+import { useDebounceValue } from "@/hooks/use-debounce-value";
+import { fetchFilteredClusters } from "./ClusterService";
 
 const MotionLink = motion(Link);
 
 export function Nav() {
   const navigate = useNavigate();
   const [showFilters, setShowFilters] = useState(false);
+  const [debouncedValue, setValue] = useDebounceValue("", 500);
+
+  useEffect(() => {
+    fetchFilteredClusters(debouncedValue)
+  },[debouncedValue])
 
   const handleLogout = () => {
     navigate("/");
@@ -36,7 +43,7 @@ export function Nav() {
       >
         <nav className="flex items-center justify-between h-16 px-4 py-2">
           <div className="flex items-center gap-2">
-            <Button
+            {/* <Button
               variant="ghost"
               size="sm"
               onClick={() => setShowFilters((prev) => !prev)}
@@ -44,7 +51,7 @@ export function Nav() {
             >
               <SlidersHorizontal className="w-4 h-4" />
               Advanced Filters
-            </Button>
+            </Button> */}
           </div>
 
           <div className="absolute left-1/2 transform -translate-x-1/2 w-88">
@@ -54,6 +61,8 @@ export function Nav() {
                 type="search"
                 placeholder="Search"
                 className="pl-10 text-sm"
+                defaultValue=""
+                onChange={(event) => setValue(event.target.value)}
               />
             </div>
           </div>

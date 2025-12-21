@@ -6,32 +6,157 @@ import { Clock } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { SiGrafana, SiRedhatopenshift } from "react-icons/si";
 import { ClusterLink } from "@/components/ClusterLink";
-import type { Cluster } from "@/consts";
+import { useStore } from "@/store/useStore";
+import { buildConsoleUrl, capitalize } from "@/utils";
+import type { ClusterResourcesInfoProps, NetworkInfoProps, NodeInfoProps, StorageClassesInfoProps, WebhookInfoProps } from "@/consts";
 
 const grafanaUrl = import.meta.env.VITE_GRAFANA_URL;
-const openshiftUrl = import.meta.env.VITE_OPENSHIFT_URL;
 
-const STATIC_CLUSTER: Cluster = {
-  id: "1",
-  name: "Cluster",
-  version: "v1.2.0",
-  network: "net",
-  environment: "production",
-};
+function WebhookInfo({
+  mutatingWebhooks,
+  validatingWebhooks,
+}: WebhookInfoProps) {
+  const sections = [
+    { title: "Mutating Webhooks", items: mutatingWebhooks },
+    { title: "Validating Webhooks", items: validatingWebhooks },
+  ];
+
+  return (
+    <div className="flex flex-row gap-4 justify-around">
+      {sections.map((section) => (
+        <Card
+          key={section.title}
+          className="p-4 transition hover:ring-2 w-1/2"
+        >
+          <CardTitle className="text-xl p-2">{section.title}</CardTitle>
+          <CardContent>
+            <ScrollArea className="max-h-48 overflow-y-auto pr-2">
+              {section.items.map((webhook, index) => (
+                <div key={index} className="flex flex-col">
+                  <div className="flex flex-row gap-2">
+                    <p className="text-md font-bold">Name: </p>
+                    <p>{webhook}</p>
+                  </div>
+                  <Separator className="my-2" />
+                </div>
+              ))}
+            </ScrollArea>
+          </CardContent>
+        </Card>
+      ))}
+    </div>
+  );
+}
+
+function NetworkInfo({ apiServerAdresses, routerLBAddress }: NetworkInfoProps) {
+  const sections = [
+    { title: "API Servers:", items: apiServerAdresses },
+    { title: "Router LBs:", items: routerLBAddress },
+  ];
+
+  return (
+    <div className="flex flex-row gap-4 max-h-46 h-43 justify-around">
+      {sections.map((section) => (
+        <Card
+          key={section.title}
+          className="transition hover:ring-2 flex flex-col gap-1 basis-1/2"
+        >
+          <CardTitle className="mx-2">{section.title}</CardTitle>
+          <CardContent>
+            <ScrollArea className="max-h-40 overflow-y-auto">
+              {section.items.map((address) => (
+                <p key={address}>{address}</p>
+              ))}
+            </ScrollArea>
+          </CardContent>
+        </Card>
+      ))}
+    </div>
+  );
+}
+
+function StorageClassesInfo({
+  storageClasses,
+}: StorageClassesInfoProps) {
+  return (
+    <>
+      {storageClasses.map((sc) => (
+        <Card className="transition hover:ring-2 flex flex-col gap-4">
+          <CardContent>
+            <div className="flex flex-row gap-2">
+              <p className="text-md font-bold">Name: </p>
+              <p>{sc.name}</p>
+            </div>
+            <div className="flex flex-row gap-2">
+              <p className="text-md font-bold">Type: </p>
+              <p>{sc.provisioner}</p>
+            </div>
+          </CardContent>
+        </Card>
+      ))}
+    </>
+  );
+}
+
+function NodeInfo({ node }: NodeInfoProps) {
+  return (
+    <Card className="transition hover:ring-2 flex flex-col gap-4">
+      <CardTitle className="pl-4">{node.hostname}</CardTitle>
+      <CardContent>
+        <p className="text-sm">IP: {node.internalIP}</p>
+        <p className="text-sm">Kubelet Version: {node.kubeletVersion}</p>
+        <p className="text-sm">OS: {node.osImage}</p>
+      </CardContent>
+    </Card>
+  );
+}
+
+function ClusterResourcesInfo({
+  clusterResources,
+}: ClusterResourcesInfoProps) {
+  return (
+    <Card className="transition hover:ring-2 flex flex-col gap-1">
+      {Object.entries(clusterResources).map(([key, value]) =>
+        value !== "0" ? (
+          <div key={capitalize(key)} className="flex gap-2 mx-4">
+            <p className="text-lg text-bold justify-start">
+              {capitalize(key)}:
+            </p>
+            <p className="text-md">{value}</p>
+          </div>
+        ) : (
+          <></>
+        )
+      )}
+    </Card>
+  );
+}
 
 export const ClusterPanel = () => {
+  const { clusters } = useStore();
   const { id: clusterId } = useParams<{ id: string }>();
+  const cluster = clusters.find((c) => c.clusterID === clusterId);
   const timestamp = new Date().toLocaleString();
 
   const clusterDetails = [
-    { label: "Version", value: STATIC_CLUSTER.version },
-    { label: "Network", value: STATIC_CLUSTER.network },
-    { label: "Environment", value: STATIC_CLUSTER.environment },
+    { label: "Version", value: cluster?.kubernetesVersion },
+    {
+      label: "Network",
+      value: cluster?.clusterDnsConfig?.searchDomains
+        ? cluster.clusterDnsConfig.searchDomains[0]
+        : "",
+    },
   ];
 
   const linkItems = [
     {
-      url: openshiftUrl,
+      url:
+        cluster?.clusterDnsConfig.searchDomains && cluster?.name
+          ? buildConsoleUrl(
+              cluster?.name,
+              cluster.clusterDnsConfig.searchDomains[0]
+            )
+          : "",
       label: "Link to OpenShift",
       colorClass: "text-red-600",
       Icon: SiRedhatopenshift,
@@ -56,9 +181,7 @@ export const ClusterPanel = () => {
       </div>
 
       <div>
-        <h1 className="text-2xl font-bold text-foreground">
-          {STATIC_CLUSTER.name} {clusterId}
-        </h1>
+        <h1 className="text-2xl font-bold text-foreground">{cluster?.name}</h1>
         <p className="text-sm text-muted-foreground mt-1 flex items-center gap-1">
           <Clock className="w-4 h-4 text-muted-foreground" />
           Last updated: {timestamp}
@@ -93,33 +216,78 @@ export const ClusterPanel = () => {
   );
 };
 
-const CustomWidget = ({ id }: { id: number }) => (
+type CustomWidgetProps = {
+  id: number;
+  title?: string;
+  children: React.ReactNode;
+};
+
+const CustomWidget = ({ id, title, children }: CustomWidgetProps) => (
   <Card key={id} className="mb-4">
     <CardHeader>
-      <CardTitle>Widget {id}</CardTitle>
+      <CardTitle className="text-lg">{title}</CardTitle>
     </CardHeader>
-    <CardContent>
-      <p className="text-sm text-muted-foreground">
-        This is dynamic content for widget {id}. You can replace this with
-        charts, tables, logs, etc.
-      </p>
-    </CardContent>
+    <CardContent>{children}</CardContent>
   </Card>
 );
 
 export default function ClustersPage() {
-  const widgets = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+  const { clusters } = useStore();
+  const { id: clusterId } = useParams<{ id: string }>();
+  const cluster = clusters.find((c) => c.clusterID === clusterId);
 
   return (
     <div className="flex border border-border bg-background shadow-sm h-full">
       <ClusterPanel />
-      <div className="w-3/4 p-6 bg-gradient-to-br dark:from-primary/30 via-primary-dark/10 dark:to-primary-light/20 overflow-auto">
-        <ScrollArea className="pr-4">
-          {widgets.map((id) => (
-            <CustomWidget id={id} />
-          ))}
-        </ScrollArea>
-      </div>
+      {cluster ? (
+        <div className="w-3/4 p-6 bg-gradient-to-br dark:from-primary/30 via-primary-dark/10 dark:to-primary-light/20 overflow-auto">
+          <ScrollArea>
+            <CustomWidget title="Nodes" id={1} key={1}>
+              <ScrollArea className="max-h-80 overflow-y-auto">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 m-4">
+                  {cluster.nodeInfo.map((n) => (
+                    <NodeInfo node={n} />
+                  ))}
+                </div>
+              </ScrollArea>
+            </CustomWidget>
+            <div className="flex gap-4">
+              <div className="basis-1/2 shrink-0">
+                <CustomWidget title="Cluster Resources" id={2} key={2}>
+                  <ClusterResourcesInfo
+                    clusterResources={cluster.clusterResources}
+                  />
+                </CustomWidget>
+              </div>
+              <div className="basis-1/2">
+                <CustomWidget title="Network Info" id={3} key={3}>
+                  <NetworkInfo
+                    apiServerAdresses={cluster.apiServerAddresses}
+                    routerLBAddress={cluster.routerLBAddress}
+                  />
+                </CustomWidget>
+              </div>
+            </div>
+            <CustomWidget title="Storage Classes" id={4} key={4}>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <StorageClassesInfo
+                  storageClasses={cluster.storageProvisioners}
+                />
+              </div>
+            </CustomWidget>
+            <CustomWidget title="Webhooks" id={5} key={5}>
+              <div>
+                <WebhookInfo
+                  mutatingWebhooks={cluster.mutatingWebhooks}
+                  validatingWebhooks={cluster.validatingWebhooks}
+                />
+              </div>
+            </CustomWidget>
+          </ScrollArea>
+        </div>
+      ) : (
+        <></>
+      )}
     </div>
   );
 }
