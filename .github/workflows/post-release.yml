@@ -114,7 +114,7 @@ jobs:
     - name: Helm package
       id: build
       run: |
-        helm package charts/${{ steps.oci-chart-name.outputs.value }} --version ${{ steps.version.outputs.value }} --app-version ${{ steps.version.outputs.value }}
+        helm package charts/${{ steps.chart-name.outputs.value }} --version ${{ steps.version.outputs.value }} --app-version ${{ steps.version.outputs.value }}
         echo "package=${{ steps.oci-chart-name.outputs.value }}-${{ steps.version.outputs.value }}.tgz" >> "$GITHUB_OUTPUT"
 
     - name: Upload chart as artifact
