@@ -7,7 +7,7 @@ COPY . .
 RUN VITE_BACKEND_URL="__BACKEND_URL__" \
     npm run build
 
-FROM nginx:stable-alpine as production
+FROM nginx:stable-alpine AS production
 
 COPY --from=builder /app/dist /usr/share/nginx/html
 COPY entrypoint.sh /docker-entrypoint.sh

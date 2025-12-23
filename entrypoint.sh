@@ -6,7 +6,7 @@ set -e
 echo "Replacing placeholders with real URLs..."
 ROOT="/usr/share/nginx/html"
 
-grep -rl --include="*.html" --include="*.js" --include="*.css" "__BACKEND_URL__" "$ROOT" | \
+find "$ROOT" -type f \( -name '*.html' -o -name '*.js' -o -name '*.css' \) -exec grep -l "__BACKEND_URL__" {} + | \
   xargs -r sed -i "s|__BACKEND_URL__|$BACKEND_URL|g"
 
 echo "Backend URL replaced!"
