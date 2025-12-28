@@ -152,10 +152,7 @@ export const ClusterPanel = () => {
     {
       url:
         cluster?.clusterDnsConfig.searchDomains && cluster?.name
-          ? buildConsoleUrl(
-              cluster?.name,
-              cluster.clusterDnsConfig.searchDomains[0]
-            )
+          ? buildConsoleUrl(cluster?.name)
           : "",
       label: "Link to OpenShift",
       colorClass: "text-red-600",
@@ -269,11 +266,14 @@ export default function ClustersPage() {
               </div>
             </div>
             <CustomWidget title="Storage Classes" id={4} key={4}>
+              {cluster.storageProvisioners ? 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <StorageClassesInfo
                   storageClasses={cluster.storageProvisioners}
-                />
-              </div>
+                /> 
+              </div>:
+              <p className="text-lg">No storage provisioners configured for cluster {cluster.name}</p>
+            }
             </CustomWidget>
             <CustomWidget title="Webhooks" id={5} key={5}>
               <div>
