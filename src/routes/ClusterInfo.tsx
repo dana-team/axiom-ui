@@ -34,7 +34,7 @@ function WebhookInfo({
               {section.items.map((webhook, index) => (
                 <div key={index} className="flex flex-col">
                   <div className="flex flex-row gap-2">
-                    <p className="text-md font-bold">Name: </p>
+                    <p className="text-md text-muted-foreground">Name: </p>
                     <p>{webhook}</p>
                   </div>
                   <Separator className="my-2" />
@@ -48,28 +48,35 @@ function WebhookInfo({
   );
 }
 
-function NetworkInfo({ apiServerAdresses, routerLBAddress }: NetworkInfoProps) {
+function NetworkInfo({ apiServerAdresses, routerLBAddress, dnsServers, segments }: NetworkInfoProps) {
   const sections = [
     { title: "API Servers:", items: apiServerAdresses },
     { title: "Router LBs:", items: routerLBAddress },
+    { title: "DNS Servers:", items: dnsServers },
+    { title: "Segments:", items: segments }
   ];
 
   return (
-    <div className="flex flex-row gap-4 max-h-46 h-43 justify-around">
+    <div className="flex flex-wrap gap-4 p-4 justify-between">
       {sections.map((section) => (
+        section.items ? 
         <Card
           key={section.title}
-          className="transition hover:ring-2 flex flex-col gap-1 basis-1/2"
+          className="flex flex-col gap-2 p-4 m-2 basis-40 transition hover:ring-2"
         >
-          <CardTitle className="mx-2">{section.title}</CardTitle>
-          <CardContent>
-            <ScrollArea className="max-h-40 overflow-y-auto">
+          <p className="text-md font-medium text-muted-foreground">
+            {section.title}
+          </p>
+          <ScrollArea className="h-32">
+            <div className="space-y-1">
               {section.items.map((address) => (
-                <p key={address}>{address}</p>
+                <p key={address} className="text-sm">{address}</p>
               ))}
-            </ScrollArea>
-          </CardContent>
+            </div>
+          </ScrollArea>
         </Card>
+        :
+        <></>
       ))}
     </div>
   );
@@ -84,11 +91,11 @@ function StorageClassesInfo({
         <Card className="transition hover:ring-2 flex flex-col gap-4">
           <CardContent>
             <div className="flex flex-row gap-2">
-              <p className="text-md font-bold">Name: </p>
+              <p className="text-md text-muted-foreground">Name: </p>
               <p>{sc.name}</p>
             </div>
             <div className="flex flex-row gap-2">
-              <p className="text-md font-bold">Type: </p>
+              <p className="text-md text-muted-foreground">Type: </p>
               <p>{sc.provisioner}</p>
             </div>
           </CardContent>
@@ -115,20 +122,23 @@ function ClusterResourcesInfo({
   clusterResources,
 }: ClusterResourcesInfoProps) {
   return (
-    <Card className="transition hover:ring-2 flex flex-col gap-1">
+    <div className="flex flex-row justify-between gap-1">
       {Object.entries(clusterResources).map(([key, value]) =>
         value !== "0" ? (
-          <div key={capitalize(key)} className="flex gap-2 mx-4">
-            <p className="text-lg text-bold justify-start">
-              {capitalize(key)}:
-            </p>
-            <p className="text-md">{value}</p>
-          </div>
+          <Card
+          key={key}
+          className="flex flex-col gap-1 p-3 m-2 basis-40 transition hover:ring-2 align-middle"
+        >
+          <p className="text-sm font-medium text-muted-foreground">
+            {capitalize(key)}
+          </p>
+          <p className="text-lg font-semibold">{value}</p>
+        </Card>
         ) : (
           <></>
         )
       )}
-    </Card>
+    </div>
   );
 }
 
@@ -248,27 +258,28 @@ export default function ClustersPage() {
                 </div>
               </ScrollArea>
             </CustomWidget>
-            <div className="flex gap-4">
-              <div className="basis-1/2 shrink-0">
-                <CustomWidget title="Cluster Resources" id={2} key={2}>
-                  <ClusterResourcesInfo
-                    clusterResources={cluster.clusterResources}
-                  />
-                </CustomWidget>
-              </div>
-              <div className="basis-1/2">
-                <CustomWidget title="Network Info" id={3} key={3}>
-                  <NetworkInfo
-                    apiServerAdresses={cluster.apiServerAddresses}
-                    routerLBAddress={cluster.routerLBAddress}
-                  />
-                </CustomWidget>
-              </div>
+            
+            <div className="basis-2/3">
+              <CustomWidget title="Network Info" id={3} key={3}>
+                <NetworkInfo
+                  dnsServers={cluster.clusterDnsConfig.servers}
+                  apiServerAdresses={cluster.apiServerAddresses}
+                  routerLBAddress={cluster.routerLBAddress}
+                  segments={cluster.segments}
+                />
+              </CustomWidget>
+            </div>
+            <div className="basis-1/3 shrink-0">
+              <CustomWidget title="Cluster Resources" id={2} key={2}>
+                <ClusterResourcesInfo
+                  clusterResources={cluster.clusterResources}
+                />
+              </CustomWidget>
             </div>
             <CustomWidget title="Storage Classes" id={4} key={4}>
               {cluster.storageProvisioners ? 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <StorageClassesInfo
+                <StorageClassesInfo 
                   storageClasses={cluster.storageProvisioners}
                 /> 
               </div>:

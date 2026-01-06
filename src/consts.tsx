@@ -11,6 +11,8 @@ export type ClusterResourcesInfoProps = {
 export type NetworkInfoProps = {
   apiServerAdresses: string[];
   routerLBAddress: string[];
+  dnsServers: string[] | undefined;
+  segments: string[];
 };
 
 export type StorageClassesInfoProps = {
@@ -41,6 +43,7 @@ export type Cluster = {
   storageProvisioners: StorageProvisioner[];
   mutatingWebhooks: string[];
   validatingWebhooks: string[];
+  segments: string[];
 };
 
 export type ClusterDnsConfig = {
