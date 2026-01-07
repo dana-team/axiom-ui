@@ -27,17 +27,25 @@ const ClusterCard = ({ cluster }: ClusterCardProps) => {
             </div>
           </div>
         </CardHeader>
+        <CardContent className="flex flex-col gap-y-2">
+          <p className="text-muted-foreground">Segments:</p>
+           <div className="flex gap-3">
+              {cluster.segments.map((segment: string) => (
+                <Badge variant="outline">{segment}</Badge>
+              ))}
+            </div>
+        </CardContent>
         <CardContent>
           <Badge
             variant="outline"
             className="flex gap-2 flex-row justify-around w-full"
-          >
+          > 
             {Object.entries(cluster.clusterResources as ClusterResources)
             .filter(([, value]) => value !== "0")
             .map(([key, value]) => (
               <div key={key} className="flex flex-col h-24 justify-center gap-1">
-                <p className="text-lg font-bold">{capitalize(key)}:</p>
-                <p className="text-md">{value}</p>
+                <p className="text-lg text-muted-foreground">{capitalize(key)}:</p>
+                <p className="text-sm">{value}</p>
               </div>
             ))}
           </Badge>
