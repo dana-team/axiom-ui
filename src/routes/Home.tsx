@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { BookMarked, ArrowRight, Zap, BarChart2, Link2 } from "lucide-react";
+import { ArrowRight, Zap, BarChart2, Link2 } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
 
 const MotionLink = motion(Link);
@@ -86,10 +86,10 @@ export default function HomePage() {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              Log in
+              Start
               <ArrowRight className="ml-2 h-5 w-5" />
             </MotionLink>
-            <MotionLink
+            {/* <MotionLink
               to="https://docs.com/docs"
               target="_blank"
               rel="noreferrer"
@@ -102,7 +102,7 @@ export default function HomePage() {
             >
               <BookMarked className="mr-2 h-5 w-5" />
               <span>Documentation</span>
-            </MotionLink>
+            </MotionLink> */}
           </motion.div>
 
           <motion.div
