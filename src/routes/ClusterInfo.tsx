@@ -57,26 +57,25 @@ function NetworkInfo({ apiServerAdresses, routerLBAddress, dnsServers, segments 
   ];
 
   return (
-    <div className="flex flex-wrap gap-4 p-4 justify-between">
+    <div className="grid grid-cols-2 gap-4">
       {sections.map((section) => (
-        section.items ? 
-        <Card
-          key={section.title}
-          className="flex flex-col gap-2 p-4 m-2 basis-40 transition hover:ring-2"
-        >
-          <p className="text-md font-medium text-muted-foreground">
-            {section.title}
-          </p>
-          <ScrollArea className="h-32">
-            <div className="space-y-1">
-              {section.items.map((address) => (
-                <p key={address} className="text-sm">{address}</p>
-              ))}
-            </div>
-          </ScrollArea>
-        </Card>
-        :
-        <></>
+        section.items && section.items.length > 0 ? (
+          <Card
+            key={section.title}
+            className="flex flex-col gap-3 p-4 transition hover:ring-2"
+          >
+            <p className="text-lg font-medium text-muted-foreground">
+              {section.title}
+            </p>
+            <ScrollArea className="h-40 flex items-center justify-center">
+              <div className="space-y-3 pr-4">
+                {section.items.map((address) => (
+                  <p key={address} className="text-lg font-medium">{address}</p>
+                ))}
+              </div>
+            </ScrollArea>
+          </Card>
+        ) : null
       ))}
     </div>
   );
@@ -121,23 +120,23 @@ function NodeInfo({ node }: NodeInfoProps) {
 function ClusterResourcesInfo({
   clusterResources,
 }: ClusterResourcesInfoProps) {
+  const resourceEntries = Object.entries(clusterResources).filter(
+    ([, value]) => value !== "0"
+  );
+
   return (
-    <div className="flex flex-row justify-between gap-1">
-      {Object.entries(clusterResources).map(([key, value]) =>
-        value !== "0" ? (
-          <Card
+    <div className="grid grid-cols-2 gap-3">
+      {resourceEntries.map(([key, value]) => (
+        <Card
           key={key}
-          className="flex flex-col gap-1 p-3 m-2 basis-40 transition hover:ring-2 align-middle"
+          className="flex flex-col gap-3 p-4 transition hover:ring-2 justify-center items-center min-h-24"
         >
-          <p className="text-sm font-medium text-muted-foreground">
+          <p className="text-lg font-medium text-muted-foreground text-center">
             {capitalize(key)}
           </p>
-          <p className="text-lg font-semibold">{value}</p>
+          <p className="text-2xl font-bold text-center">{value}</p>
         </Card>
-        ) : (
-          <></>
-        )
-      )}
+      ))}
     </div>
   );
 }

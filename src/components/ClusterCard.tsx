@@ -4,14 +4,16 @@ import { Link } from "react-router-dom";
 import type { Cluster, ClusterResources } from "@/consts";
 import { capitalize } from "@/utils";
 
+
 interface ClusterCardProps {
   cluster: Cluster;
 }
 
+
 const ClusterCard = ({ cluster }: ClusterCardProps) => {
   return (
     <Link to={`/clusters/${cluster.clusterID}`} className="block">
-      <Card className="transition hover:ring-2">
+      <Card className="transition hover:ring-2 flex flex-col h-full">
         <CardHeader>
           <div className="flex items-center justify-between h-12">
             <CardTitle className="text-2xl">{cluster.name}</CardTitle>
@@ -21,25 +23,25 @@ const ClusterCard = ({ cluster }: ClusterCardProps) => {
                 <Badge variant="outline">
                   {cluster.clusterDnsConfig.searchDomains[0]}
                 </Badge>
-              ) : (
-                <></>
-              )}
+              ) : null}
             </div>
           </div>
         </CardHeader>
-        {cluster.segments ? 
-          <CardContent className="flex flex-col gap-y-2">
-            <p className="text-muted-foreground">Segments:</p>
-            <div className="flex gap-3">
-              {cluster.segments.map((segment: string) => (
-                <Badge variant="outline">{segment}</Badge>
-              ))}
-            </div>
-          </CardContent> :
-          <></>
-        }
+
+        <CardContent className="flex flex-col gap-y-2">
+          <p className="text-muted-foreground">Segments:</p>
+          <div className="flex gap-3 flex-wrap">
+            {cluster.segments && cluster.segments.length > 0 ? (
+              cluster.segments.map((segment: string) => (
+                <Badge key={segment} variant="outline">{segment}</Badge>
+              ))
+            ) : (
+              <p className="text-sm text-muted-foreground italic">Not found</p>
+            )}
+          </div>
+        </CardContent>
         
-        <CardContent>
+        <CardContent className="flex-grow">
           <Badge
             variant="outline"
             className="flex gap-2 flex-row justify-around w-full"
@@ -56,6 +58,7 @@ const ClusterCard = ({ cluster }: ClusterCardProps) => {
         </CardContent>
       </Card>
     </Link>
-  );};
+  );
+};
 
 export default ClusterCard;
