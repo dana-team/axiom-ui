@@ -30,6 +30,7 @@ function WebhookInfo({
         >
           <CardTitle className="text-xl p-2">{section.title}</CardTitle>
           <CardContent>
+          {section.items ? 
             <ScrollArea className="max-h-48 overflow-y-auto pr-2">
               {section.items.map((webhook, index) => (
                 <div key={index} className="flex flex-col">
@@ -40,7 +41,8 @@ function WebhookInfo({
                   <Separator className="my-2" />
                 </div>
               ))}
-            </ScrollArea>
+            </ScrollArea> 
+          : <>No {section.title} found on cluster</> }
           </CardContent>
         </Card>
       ))}
