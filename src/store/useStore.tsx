@@ -5,6 +5,8 @@ import { fetchFilteredClusters } from "@/ClusterService";
 
 type State = {
   clusters: Cluster[];
+  filteredClusters: Cluster[];
+  activeFilters: Record<string, string[]>;
   theme: Theme;
   loading: boolean;
   error: string | null;
@@ -13,6 +15,8 @@ type State = {
   setTheme: (theme: Theme) => void;
   setPage: (page: number) => void;
   fetchClusters: () => void;
+  setActiveFilters: (filters: Record<string, string[]>) => void;
+  setFilteredClusters: (filtered: Cluster[]) => void;
 };
 
 const setDocumentTheme = (theme: Theme): void => {
@@ -24,6 +28,8 @@ export const useStore = create<State>()(
   persist(
     (set) => ({
       clusters: [],
+      filteredClusters: [],
+      activeFilters: {},
       totalItems: 0,
       loading: false,
       error: null,
@@ -34,9 +40,11 @@ export const useStore = create<State>()(
         setDocumentTheme(theme);
       },
       setPage: (page: number) => set({ page }),
+      setActiveFilters: (filters) => set({ activeFilters: filters }),
       fetchClusters: async () => {
         await fetchFilteredClusters();
       },
+      setFilteredClusters: (filtered) => set({ filteredClusters: filtered }),
     }),
     {
       name: "app-storage",

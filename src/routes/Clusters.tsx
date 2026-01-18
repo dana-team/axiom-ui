@@ -78,7 +78,7 @@ const ClustersPagePagination = ({
 };
 
 export default function ClustersPage() {
-  const { clusters, totalItems, loading, page, setPage, fetchClusters } =
+  const { totalItems, loading, page, setPage, fetchClusters, filteredClusters } =
     useStore();
 
   useEffect(() => {
@@ -91,14 +91,14 @@ export default function ClustersPage() {
   const paginatedClusters = useMemo(() => {
     const startIdx = (page - 1) * ITEMS_PER_PAGE;
     const endIdx = startIdx + ITEMS_PER_PAGE;
-    return clusters.slice(startIdx, endIdx);
-  }, [clusters, page]);
+    return filteredClusters.slice(startIdx, endIdx);
+  }, [filteredClusters, page]);
 
   return (
     <div className="p-10 space-y-6">
       <div className="flex justify-between">
         <h1 className="text-3xl font-bold">{`${totalItems} Clusters found`}</h1>
-        <ClusterCompareDialog clusters={clusters} />
+        <ClusterCompareDialog clusters={filteredClusters} />
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">

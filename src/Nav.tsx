@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import ThemeToggle from "@/components/ThemeToggle";
 // import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { LogOut, Search } from "lucide-react";
+import { LogOut, Search, SlidersHorizontal } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Input } from "@/components/ui/input";
 import { useEffect, useState } from "react";
@@ -14,12 +14,47 @@ import {
 import NavFiltersDrawer from "@/components/NavFiltersDrawer";
 import { useDebounceValue } from "@/hooks/use-debounce-value";
 import { fetchFilteredClusters } from "./ClusterService";
+import Gopher from "@/assets/easteregg.svg"
 
 // const MotionLink = motion(Link);
+function GopherEasterEgg() {
+  return (
+    <motion.div
+      className="absolute left-3 top-3 cursor-pointer select-none"
+      initial={{ opacity: 0, scale: 0.8 }}
+      animate={{ opacity: 1, scale: 1 }}
+      whileHover={{
+        rotate: [0, -10, 10, -10, 0],
+        scale: 1.2,
+      }}
+      whileTap={{ scale: 0.9 }}
+      transition={{
+        duration: 0.6,
+        ease: "easeInOut",
+      }}
+      title="Go 🐹"
+    >
+      <motion.span
+        animate={{
+          y: [0, -2, 0],
+        }}
+        transition={{
+          repeat: Infinity,
+          duration: 2,
+          ease: "easeInOut",
+        }}
+        className="text-2xl"
+      >
+        <img src={Gopher} className="h-10"></img>
+      </motion.span>
+    </motion.div>
+  );
+}
+
 
 export function Nav() {
   const navigate = useNavigate();
-  const [showFilters] = useState(false);
+  const [showFilters, setShowFilters] = useState(false);
   const [debouncedValue, setValue] = useDebounceValue("", 500);
 
   useEffect(() => {
@@ -42,8 +77,9 @@ export function Nav() {
         className="border-b border-sidebar-border relative"
       >
         <nav className="flex items-center justify-between h-16 px-4 py-2">
-          <div className="flex items-center gap-2">
-            {/* <Button
+          <div className="flex items-center gap-2 m-8">
+            <GopherEasterEgg />
+            <Button
               variant="ghost"
               size="sm"
               onClick={() => setShowFilters((prev) => !prev)}
@@ -51,7 +87,7 @@ export function Nav() {
             >
               <SlidersHorizontal className="w-4 h-4" />
               Advanced Filters
-            </Button> */}
+            </Button>
           </div>
 
           <div className="absolute left-1/2 transform -translate-x-1/2 w-88">
@@ -97,7 +133,7 @@ export function Nav() {
           {showFilters && (
             <AccordionContent
               forceMount
-              className="absolute left-0 right-0 bg-sidebar px-4 py-4 border-t border-sidebar-border z-50 shadow-lg"
+              className="left-0 right-0 bg-sidebar px-4 py-4 border-t border-sidebar-border z-50 shadow-lg"
             >
               <motion.div
                 initial={{ height: 0, opacity: 0 }}
