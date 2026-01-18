@@ -3,14 +3,13 @@ import { useStore } from "@/store/useStore"
 import type { ClusterResponse } from "@/consts";
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
-
 export const fetchFilteredClusters = async (name: string = ""): Promise<void> => {
     try {
       useStore.setState({loading: true, error: null})
       const res = await axios.get<ClusterResponse>(`${BACKEND_URL}/clusters?name=${name}`);
       const data = res.data;
       if (data.success) {
-        useStore.setState({clusters: data.data, totalItems: data.count || 0})
+        useStore.setState({clusters: data.data, totalItems: data.count || 0, filteredClusters: data.data})
       } else {
         useStore.setState({ error: "Failed to fetch clusters", totalItems: 0 });
       }

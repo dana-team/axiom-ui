@@ -16,27 +16,109 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { Columns } from "lucide-react";
+import { useStore } from "@/store/useStore";
 
-interface ClusterCompareDialogProps {
-  clusters: Cluster[];
+const COMPARABLE_FIELDS = [
+  { 
+    key: "kubernetesVersion", 
+    label: "Kubernetes Version",
+    getValue: (c: Cluster) => c.kubernetesVersion
+  },
+  { 
+    key: "network", 
+    label: "Network", 
+    getValue: (c: Cluster) => c.clusterDnsConfig?.searchDomains?.[0] || "N/A"
+  },
+  { 
+    key: "routerLBAddress", 
+    label: "Router LB Address", 
+    getValue: (c: Cluster) => JSON.stringify(c.routerLBAddress || [])
+  },
+  { 
+    key: "apiServerAddresses", 
+    label: "API Server Addresses", 
+    getValue: (c: Cluster) => JSON.stringify(c.apiServerAddresses || [])
+  },
+  { 
+    key: "nodeCount", 
+    label: "Node Count", 
+    getValue: (c: Cluster) => String(c.nodeInfo?.length || 0)
+  },
+  { 
+    key: "storageProvisioners", 
+    label: "Storage Provisioners", 
+    getValue: (c: Cluster) => JSON.stringify(
+      c.storageProvisioners?.map(s => ({
+        name: s.name,
+      })) || []
+    )
+  },
+  { 
+    key: "identityProviders", 
+    label: "Identity Providers", 
+    getValue: (c: Cluster) => JSON.stringify(c.identityProviders || [])
+  },
+] as const;
+
+
+interface ComparisonDifference {
+  key: string;
+  label: string;
+  values: Record<string, any>;
 }
 
-const MOCK_JSON = `{
-  "differences": [
-    { "key": "version", "clusterA": "1.22", "clusterB": "1.24" },
-    { "key": "region", "clusterA": "us-west", "clusterB": "eu-central" },
-    { "key": "nodeCount", "clusterA": 3, "clusterB": 5 },
-    { "key": "networkPolicy", "clusterA": "enabled", "clusterB": "disabled" },
-    { "key": "logging", "clusterA": "Stackdriver", "clusterB": "CloudWatch" },
-    { "key": "autoscaling", "clusterA": true, "clusterB": false },
-    { "key": "storageClass", "clusterA": "standard", "clusterB": "fast-ssd" },
-    { "key": "kubeProxyMode", "clusterA": "iptables", "clusterB": "ipvs" },
-    { "key": "ingressController", "clusterA": "nginx", "clusterB": "traefik" },
-    { "key": "apiEndpoint", "clusterA": "https://api.cluster-a.io", "clusterB": "https://api.cluster-b.io" }
-  ]
-}`;
+interface ClusterCompareDialogProps {
+  clusters?: Cluster[]; // Optional prop, will use store if not provided
+}
 
-const ClusterCompareDialog = ({ clusters }: ClusterCompareDialogProps) => {
+const buildComparison = (
+  selectedClusters: Cluster[],
+  type: "diff" | "common"
+): string => {
+  if (selectedClusters.length < 2) return "{}";
+
+  const comparisons: ComparisonDifference[] = [];
+
+  COMPARABLE_FIELDS.forEach(({ key, label, getValue }) => {
+    const values: Record<string, any> = {};
+
+    selectedClusters.forEach((cluster) => {
+      values[cluster.name || cluster.clusterID] = getValue(cluster);
+    });
+
+    // Get unique values
+    const uniqueValues = new Set(Object.values(values));
+
+    if (type === "diff") {
+      // Include only if there are differences
+      if (uniqueValues.size > 1) {
+        comparisons.push({ key, label, values });
+      }
+    } else {
+      // Include only if all values are the same
+      if (uniqueValues.size === 1) {
+        comparisons.push({ key, label, values });
+      }
+    }
+  });
+
+  return JSON.stringify(
+    {
+      type,
+      comparedClusters: selectedClusters.map((c) => c.name || c.clusterID),
+      results: comparisons,
+    },
+    null,
+    2
+  );
+};
+
+const ClusterCompareDialog = ({ clusters: propsClusterss }: ClusterCompareDialogProps) => {
+  const { filteredClusters } = useStore();
+  
+  // Use filtered clusters from store, fallback to props
+  const clusters = propsClusterss || filteredClusters;
+
   const [searchInput, setSearchInput] = useState("");
   const [selectedClusters, setSelectedClusters] = useState<Cluster[]>([]);
   const [open, setOpen] = useState(false);
@@ -56,8 +138,8 @@ const ClusterCompareDialog = ({ clusters }: ClusterCompareDialogProps) => {
   };
 
   const handleAction = (type: "diff" | "common"): void => {
-    console.log(`${type.toUpperCase()} selected clusters:`, selectedClusters);
-    setJsonResult(MOCK_JSON);
+    const result = buildComparison(selectedClusters, type);
+    setJsonResult(result);
     setView("result");
   };
 
@@ -120,7 +202,7 @@ const ClusterCompareDialog = ({ clusters }: ClusterCompareDialogProps) => {
             <Button
               size="icon"
               className="bg-primary-dark/90 hover:bg-primary-dark/80 dark:bg-primary-lighter/70 dark:hover:bg-primary/60 
-        text-white transition round"
+        text-white transition rounded"
               onClick={() => setOpen(true)}
             >
               <Columns className="h-5 w-5" />
@@ -154,7 +236,6 @@ const ClusterCompareDialog = ({ clusters }: ClusterCompareDialogProps) => {
         ) : (
           <ComparisonDisplay value={jsonResult} />
         )}
-
         <div className="mt-4 gap-2 flex justify-between">
           <div className="flex justify-start gap-2">
             <Button variant="outline" onClick={() => setOpen(false)}>
