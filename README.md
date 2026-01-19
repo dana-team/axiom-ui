@@ -32,6 +32,17 @@ To run the app correctly, create a `.env` file at the root of the project and de
 ```env
 VITE_GRAFANA_URL=https://grafana.example.com
 VITE_OPENSHIFT_URL=https://console-openshift.example.com
+VITE_BACKEND_URL=https://backend.example.com/v1
 ```
 
 > ⚠️ Vite requires all environment variables to be prefixed with `VITE_` in order to be exposed to the client-side code.
+
+---
+
+## 🤝 Contributing
+
+We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details on how to get started and our release process.
+
+## 📄 License
+
+This project is licensed under the [MIT License](LICENSE).

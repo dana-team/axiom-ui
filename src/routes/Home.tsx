@@ -1,9 +1,12 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowRight, Zap, BarChart2, Link2 } from "lucide-react";
+import { BookMarked, ArrowRight, Zap, BarChart2, Link2 } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
 
 const MotionLink = motion(Link);
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+
+
 
 type FeatureCardProps = {
   feature: string;
@@ -89,8 +92,8 @@ export default function HomePage() {
               Start
               <ArrowRight className="ml-2 h-5 w-5" />
             </MotionLink>
-            {/* <MotionLink
-              to="https://docs.com/docs"
+            <MotionLink
+              to={`https://${BACKEND_URL}/swagger/index.html`}
               target="_blank"
               rel="noreferrer"
               className={
@@ -102,7 +105,7 @@ export default function HomePage() {
             >
               <BookMarked className="mr-2 h-5 w-5" />
               <span>Documentation</span>
-            </MotionLink> */}
+            </MotionLink>
           </motion.div>
 
           <motion.div
