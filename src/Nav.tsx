@@ -1,8 +1,8 @@
-import { useNavigate } from "react-router-dom";
+import { Link,useNavigate } from "react-router-dom";
 import ThemeToggle from "@/components/ThemeToggle";
 // import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import { LogOut, Search } from "lucide-react";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { BookMarked, LogOut, Search } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Input } from "@/components/ui/input";
 import { useEffect, useState } from "react";
@@ -15,7 +15,8 @@ import NavFiltersDrawer from "@/components/NavFiltersDrawer";
 import { useDebounceValue } from "@/hooks/use-debounce-value";
 import { fetchFilteredClusters } from "./ClusterService";
 
-// const MotionLink = motion(Link);
+const MotionLink = motion(Link);
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 export function Nav() {
   const navigate = useNavigate();
@@ -76,8 +77,8 @@ export function Nav() {
               <AvatarFallback>TD</AvatarFallback>
             </Avatar> */}
             <ThemeToggle />
-            {/* <MotionLink
-              to="https://docs.com/docs"
+            <MotionLink
+              to={`https://${BACKEND_URL}/swagger/index.html`}
               target="_blank"
               rel="noreferrer"
               className={
@@ -89,7 +90,7 @@ export function Nav() {
             >
               <BookMarked className="mr-2 h-5 w-5" />
               <span>Documentation</span>
-            </MotionLink> */}
+            </MotionLink>
           </div>
         </nav>
 
